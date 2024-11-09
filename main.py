@@ -29,12 +29,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
 # Define the request body model
 class EmailRequest(BaseModel):
     name: str
     email: EmailStr
     message: str
     to_email: EmailStr
+
 
 # Email configuration using environment variables
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")  # Default to smtp.gmail.com
@@ -61,9 +64,23 @@ def send_email_background(email_data):
         msg["From"] = FROM_EMAIL
         msg["To"] = email_data["to_email"]
         msg["Subject"] = "New Message from Your Portfolio"
-        
-        body = f"Name: {email_data['name']}\nEmail: {email_data['email']}\nMessage: {email_data['message']}"
-        msg.attach(MIMEText(body, "plain"))
+
+        template = f"""
+        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; background-color: #f4f4f4;">
+            <div style="max-width: 600px; margin: auto; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+            <h2 style="color: #007BFF;">New Message Received</h2>
+            <p><strong>Name:</strong> {email_data['name']}</p>
+            <p><strong>Email:</strong> {email_data['email']}</p>
+            <p><strong>Message:</strong></p>
+            <blockquote style="border-left: 4px solid #007BFF; padding-left: 10px; margin-left: 0;">
+                {email_data['message']}
+            </blockquote>
+            <p style="font-size: 12px; color: #888;">Click reply to respond to the sender.</p>
+            </div>
+        </div>
+        """
+
+        msg.attach(MIMEText(template, "html"))
 
         # Connect to the SMTP server and send the email
         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
@@ -72,6 +89,7 @@ def send_email_background(email_data):
             server.sendmail(FROM_EMAIL, email_data["to_email"], msg.as_string())
     except Exception as e:
         print("Failed to send email in background:", e)
+
 
 @app.post("/send-email")
 async def send_email(request: EmailRequest):
@@ -86,4 +104,5 @@ for r in app.routes:
     print(r.path)
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
