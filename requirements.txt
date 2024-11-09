@@ -1,0 +1,5 @@
+fastapi
+pydantic
+smtplib
+python-dotenv
+uvicorn
