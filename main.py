@@ -34,6 +34,7 @@ class EmailRequest(BaseModel):
     name: str
     email: EmailStr
     message: str
+    to_email: EmailStr
 
 # Email configuration using environment variables
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")  # Default to smtp.gmail.com
@@ -41,7 +42,6 @@ SMTP_PORT = int(os.getenv("SMTP_PORT", 587))  # Default to 587
 SMTP_USERNAME = os.getenv("SMTP_USERNAME")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 FROM_EMAIL = os.getenv("FROM_EMAIL")
-TO_EMAIL = os.getenv("TO_EMAIL")
 # Ensure that required values are not empty
 if not SMTP_SERVER or not SMTP_USERNAME or not SMTP_PASSWORD:
     raise ValueError("SMTP configuration is incomplete.")
@@ -51,7 +51,6 @@ print("SMTP_PORT:", SMTP_PORT)
 print("SMTP_USERNAME:", SMTP_USERNAME)
 print("SMTP_PASSWORD:", SMTP_PASSWORD)
 print("FROM_EMAIL:", FROM_EMAIL)
-print("TO_EMAIL:", TO_EMAIL)
 
 
 def send_email_background(email_data):
@@ -60,7 +59,7 @@ def send_email_background(email_data):
         # Create the email content
         msg = MIMEMultipart()
         msg["From"] = FROM_EMAIL
-        msg["To"] = TO_EMAIL
+        msg["To"] = email_data["to_email"]
         msg["Subject"] = "New Message from Your Portfolio"
         
         body = f"Name: {email_data['name']}\nEmail: {email_data['email']}\nMessage: {email_data['message']}"
@@ -70,7 +69,7 @@ def send_email_background(email_data):
         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
             server.starttls()  # Enable TLS
             server.login(SMTP_USERNAME, SMTP_PASSWORD)
-            server.sendmail(FROM_EMAIL, TO_EMAIL, msg.as_string())
+            server.sendmail(FROM_EMAIL, email_data["to_email"], msg.as_string())
     except Exception as e:
         print("Failed to send email in background:", e)
 
