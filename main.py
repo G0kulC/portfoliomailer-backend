@@ -61,7 +61,7 @@ def send_email_background(email_data):
         msg = MIMEMultipart()
         msg["From"] = FROM_EMAIL
         msg["To"] = TO_EMAIL
-        msg["Subject"] = "New Message from Website"
+        msg["Subject"] = "New Message from Your Portfolio"
         
         body = f"Name: {email_data['name']}\nEmail: {email_data['email']}\nMessage: {email_data['message']}"
         msg.attach(MIMEText(body, "plain"))
