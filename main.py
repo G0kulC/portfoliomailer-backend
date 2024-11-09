@@ -20,7 +20,10 @@ app = FastAPI(
 )
 
 orgins = [
+    "http://localhost:3000",
     "http://localhost:3001",
+    "https://portfoliomailer-backend.onrender.com/",    
+    
 ]
 
 app.add_middleware(
