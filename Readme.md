@@ -20,7 +20,7 @@
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/portfoliomailer-backend.git
+git clone https://github.com/G0kulC/portfoliomailer-backend.git
 cd portfoliomailer-backend
 ```
 ### 2. Create a .env File
