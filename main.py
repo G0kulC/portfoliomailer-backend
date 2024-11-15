@@ -19,21 +19,12 @@ app = FastAPI(
     redoc_url=None,
 )
 
-orgins = [
-    "https://gokuldev.netlify.app/",
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "https://portfoliomailer-backend.onrender.com/",    
-    "http://localhost:5173",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=orgins,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=["*"],  # Allow all origins
+    allow_methods=["*"],  # Allow all HTTP methods
+    allow_headers=["*"],  # Allow all headers
 )
-
 
 # Define the request body model
 class EmailRequest(BaseModel):
