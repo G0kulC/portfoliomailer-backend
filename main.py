@@ -20,10 +20,11 @@ app = FastAPI(
 )
 
 orgins = [
+    "https://gokuldev.netlify.app/",
     "http://localhost:3000",
     "http://localhost:3001",
     "https://portfoliomailer-backend.onrender.com/",    
-    
+    "http://localhost:5173",
 ]
 
 app.add_middleware(
